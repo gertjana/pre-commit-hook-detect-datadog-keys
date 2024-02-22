@@ -1,0 +1,6 @@
+-   id: detect-datadog-secrets
+    name: Detect Datadog Secrets
+    description: 'Detect Datadog Secrets'
+    entry: detect-datadog-secrets
+    language: rust
+    types: [text]
