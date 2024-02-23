@@ -1,4 +1,4 @@
-# pre-commit-hook-detect-datadog-keys
+# Detect Datadog secrets pre-commit hook
 
 [Pre-commit](https://pre-commit.com) hook to detect Datadog API Keys
 
