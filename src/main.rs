@@ -7,13 +7,13 @@ use regex::RegexBuilder;
 fn main()  -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = args().collect();
 
-    let files = args[1..].to_vec();
+    let staged_files = args[1..].to_vec();
 
     let pattern = "^.*ap[ip]_key[\\ ]*=[\\ ]*\\\"[a-f0-9]+\\\".*$";
 
     let mut result = false;
 
-    for file in files {
+    for file in staged_files {
         match search_file_for_pattern(&file, pattern) {
             Ok(true) => result = true,
             Ok(false) => (),
