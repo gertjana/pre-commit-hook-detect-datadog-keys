@@ -1,10 +1,8 @@
-use std::{
-    env::args, error::Error, fs::File, io::Read, process::exit
-};
+use std::{env::args, error::Error, fs::File, io::Read, process::exit};
 
 use regex::RegexBuilder;
 
-fn main()  -> Result<(), Box<dyn Error>> {
+fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = args().collect();
 
     let staged_files = args[1..].to_vec();
@@ -18,22 +16,20 @@ fn main()  -> Result<(), Box<dyn Error>> {
             Ok(true) => result = true,
             Ok(false) => (),
             Err(e) => {
-                // swallow but print the error 
+                // swallow but print the error
                 eprintln!("Error searching file: {}", e);
             }
         }
     }
 
     match result {
-       false => exit(0),
-       _ => exit(1)
+        false => exit(0),
+        _ => exit(1),
     }
 }
 
-fn search_file_for_pattern(in_file_str:&str, re_str: &str) -> Result<bool, Box<dyn Error>> {
-    let re = RegexBuilder::new(re_str)
-        .case_insensitive(true)
-        .build()?;
+fn search_file_for_pattern(in_file_str: &str, re_str: &str) -> Result<bool, Box<dyn Error>> {
+    let re = RegexBuilder::new(re_str).case_insensitive(true).build()?;
 
     let mut secrets_found = false;
     let mut in_file = File::open(in_file_str)?;
@@ -47,8 +43,11 @@ fn search_file_for_pattern(in_file_str:&str, re_str: &str) -> Result<bool, Box<d
             line_number += 1;
             if let Ok(line) = std::str::from_utf8(&buffer[start..index]) {
                 for capture in re.captures_iter(line) {
-                    if let Some(_) = capture.get(0) {
-                        println!("Datadog API/APP key found in: {} , line {}", in_file_str, line_number);
+                    if capture.get(0).is_some() {
+                        println!(
+                            "Datadog API/APP key found in: {} , line {}",
+                            in_file_str, line_number
+                        );
                         secrets_found = true;
                     }
                 }
@@ -57,7 +56,6 @@ fn search_file_for_pattern(in_file_str:&str, re_str: &str) -> Result<bool, Box<d
         }
     }
     Ok(secrets_found)
-
 }
 
 #[cfg(test)]
@@ -86,4 +84,3 @@ mod tests {
         assert!(secrets_found.is_err());
     }
 }
-
